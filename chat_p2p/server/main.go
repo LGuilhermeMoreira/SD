@@ -2,19 +2,23 @@ package main
 
 import (
 	"chat_p2p/server/handler"
+	"log"
 	"net"
 )
 
 func main() {
-	list, err := net.Listen("tcp", ":8080")
+	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		panic(err)
 	}
+	defer listener.Close()
+
 	for {
-		socket, err := list.Accept()
+		conn, err := listener.Accept()
 		if err != nil {
-			panic(err)
+			log.Println("Failed to accept connection:", err)
+			continue
 		}
-		go handler.HandleConnection(socket)
+		go handler.HandleConnection(conn)
 	}
 }

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	handler "chat_p2p/client/handler"
 	"net"
+	"sync"
 )
 
 func main() {
@@ -12,15 +12,19 @@ func main() {
 		panic(err)
 	}
 	defer conn.Close()
-	for {
-		var input string
-		fmt.Scanln(&input)
-		conn.Write([]byte(input))
-		buff := make([]byte, 1024)
-		_, err := conn.Read(buff)
-		if err != nil {
-			panic(err)
-		}
-		log.Println(string(buff))
-	}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		handler.HandleRead(conn)
+	}()
+
+	go func() {
+		defer wg.Done()
+		handler.HandleWrite(conn)
+	}()
+
+	wg.Wait()
 }
