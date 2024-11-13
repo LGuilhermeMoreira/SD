@@ -11,7 +11,6 @@ import (
 
 func HandleConnection(conn net.Conn) {
 	defer conn.Close()
-
 	go HandleRead(conn)
 	HandleWrite(conn)
 }
