@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net"
 	"sockets/entity"
-	"sockets/utils"
 )
 
 func Connection(conn net.Conn) {
@@ -19,11 +18,11 @@ func Connection(conn net.Conn) {
 	var resp entity.Response
 	switch req.Operation {
 	case "**":
-		resp = utils.GetReponse(entity.ScienceCalculator{}, req)
+		resp = entity.GetResponse(entity.ScienceCalculator{}, req)
 	case "@":
-		resp = utils.GetReponse(entity.AnotherCalculator{}, req)
+		resp = entity.GetResponse(entity.AnotherCalculator{}, req)
 	default:
-		resp = utils.GetReponse(entity.SimpleCalculator{}, req)
+		resp = entity.GetResponse(entity.SimpleCalculator{}, req)
 	}
 	json.NewEncoder(conn).Encode(resp)
 	return

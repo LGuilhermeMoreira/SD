@@ -11,7 +11,7 @@ const (
 )
 
 func main() {
-	input := flag.String("equation", "1 + 1", "equation resolved by calculator")
+	input := flag.String("op", "1 + 1", "equation solved by calculator")
 	flag.Parse()
 	user := entity.NewUser(*input)
 	if err := user.SendRequest(); err != nil {

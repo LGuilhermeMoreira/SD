@@ -2,9 +2,12 @@ package entity
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"golang.org/x/exp/slices"
 	"net"
-	"sockets/utils"
+	"strconv"
+	"strings"
 )
 
 const port = ":8080"
@@ -26,7 +29,7 @@ func (u *User) SendRequest() error {
 		return err
 	}
 	defer conn.Close()
-	req, err := utils.InputToRequest(u.input)
+	req, err := inputToRequest(u.input)
 	if err != nil {
 		return err
 	}
@@ -53,4 +56,39 @@ func handleWriteRead(conn net.Conn, req Request) (*Response, error) {
 		return nil, err
 	}
 	return &res, nil
+}
+
+func validateInput(input string) bool {
+	result := strings.Split(input, " ")
+	if len(result) != 3 {
+		return false
+	}
+	operation := result[1]
+	symbols := []string{"+", "-", "*", "/", "**", "@"}
+	contains := slices.Contains(symbols, operation)
+	if !contains {
+		return false
+	}
+	return true
+}
+
+func inputToRequest(input string) (*Request, error) {
+	isValid := validateInput(input)
+	if !isValid {
+		return nil, errors.New("invalid input")
+	}
+	result := strings.Split(input, " ")
+	num1, err := strconv.ParseFloat(result[0], 64)
+	if err != nil {
+		return nil, err
+	}
+	num2, err := strconv.ParseFloat(result[2], 64)
+	if err != nil {
+		return nil, err
+	}
+	return &Request{
+		Num1:      num1,
+		Num2:      num2,
+		Operation: result[1],
+	}, nil
 }
