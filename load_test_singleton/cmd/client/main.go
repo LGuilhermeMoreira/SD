@@ -11,9 +11,9 @@ const (
 )
 
 func main() {
-	input := flag.String("op", "1 + 1", "equation solved by calculator")
+	// input := flag.String("op", "1 + 1", "equation solved by calculator")
 	flag.Parse()
-	user := entity.NewUser(*input)
+	user := entity.GetUser()
 	if err := user.SendRequest(); err != nil {
 		log.Fatal(err)
 	}

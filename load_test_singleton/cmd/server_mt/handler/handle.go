@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net"
 	"sockets/entity"
+	"time"
 )
 
 func Connection(conn net.Conn) {
@@ -18,12 +19,12 @@ func Connection(conn net.Conn) {
 	var resp entity.Response
 	switch req.Operation {
 	case "**":
-		resp = entity.GetResponse(entity.ScienceCalculator{}, req)
+		resp = entity.GetResponse(entity.GetScienceCalculator(), req)
 	case "@":
-		resp = entity.GetResponse(entity.AnotherCalculator{}, req)
+		resp = entity.GetResponse(entity.GetAnotherCalculator(), req)
 	default:
-		resp = entity.GetResponse(entity.SimpleCalculator{}, req)
+		resp = entity.GetResponse(entity.GetSimpleCalculator(), req)
 	}
+	time.Sleep(100 * time.Millisecond)
 	json.NewEncoder(conn).Encode(resp)
-	return
 }

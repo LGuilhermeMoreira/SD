@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/exp/slices"
 	"net"
 	"strconv"
 	"strings"
+	"sync"
+
+	"golang.org/x/exp/slices"
 )
 
 const port = ":8080"
@@ -17,10 +19,16 @@ type User struct {
 	Result Response
 }
 
-func NewUser(input string) *User {
-	return &User{
-		input: input,
-	}
+var once = sync.Once{}
+var singletonUser *User
+
+func GetUser() *User {
+	once.Do(func() {
+		singletonUser = &User{
+			input: "1 + 1",
+		}
+	})
+	return singletonUser
 }
 
 func (u *User) SendRequest() error {
