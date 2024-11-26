@@ -9,15 +9,15 @@ import (
 )
 
 func main() {
-	start := time.Now()
 	wg := sync.WaitGroup{}
 	wg.Add(100)
+	start := time.Now()
 	for i := 0; i < 100; i++ {
 		go func() {
 			defer wg.Done()
 			user := entity.GetUser()
 			if err := user.SendRequest(); err != nil {
-				log.Fatal(err)
+				log.Println(err)
 			}
 			fmt.Println(user.Result, i)
 		}()
