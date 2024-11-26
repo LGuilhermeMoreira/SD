@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net"
-	"sockets/cmd/server_st/handler"
+	"sockets/handler"
 )
 
 const (

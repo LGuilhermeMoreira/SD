@@ -24,7 +24,6 @@ var (
 	singletonAnotherCalculator *AnotherCalculator
 )
 
-// GetSimpleCalculator retorna a instância Singleton de SimpleCalculator.
 func GetSimpleCalculator() *SimpleCalculator {
 	onceSimpleCalculator.Do(func() {
 		singletonSimpleCalculator = &SimpleCalculator{}
@@ -32,7 +31,6 @@ func GetSimpleCalculator() *SimpleCalculator {
 	return singletonSimpleCalculator
 }
 
-// GetScienceCalculator retorna a instância Singleton de ScienceCalculator.
 func GetScienceCalculator() *ScienceCalculator {
 	onceScienceCalculator.Do(func() {
 		singletonScienceCalculator = &ScienceCalculator{}
@@ -40,7 +38,6 @@ func GetScienceCalculator() *ScienceCalculator {
 	return singletonScienceCalculator
 }
 
-// GetAnotherCalculator retorna a instância Singleton de AnotherCalculator.
 func GetAnotherCalculator() *AnotherCalculator {
 	onceAnotherCalculator.Do(func() {
 		singletonAnotherCalculator = &AnotherCalculator{}
@@ -48,7 +45,6 @@ func GetAnotherCalculator() *AnotherCalculator {
 	return singletonAnotherCalculator
 }
 
-// Implementação de SimpleCalculator
 func (s SimpleCalculator) Calculate(num1, num2 float64, operation string) (float64, error) {
 	switch operation {
 	case "+":
@@ -83,7 +79,6 @@ func (s SimpleCalculator) div(num1, num2 float64) (float64, error) {
 	return num1 / num2, nil
 }
 
-// Implementação de ScienceCalculator
 func (s ScienceCalculator) Calculate(num1, num2 float64, operation string) (float64, error) {
 	switch operation {
 	case "**":
@@ -97,7 +92,6 @@ func (s ScienceCalculator) exp(num1 float64, num2 float64) (float64, error) {
 	return math.Pow(num1, num2), nil
 }
 
-// Implementação de AnotherCalculator
 func (c AnotherCalculator) Calculate(num1, num2 float64, operation string) (float64, error) {
 	switch operation {
 	case "@":

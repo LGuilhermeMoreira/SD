@@ -25,7 +25,7 @@ var singletonUser *User
 func GetUser() *User {
 	once.Do(func() {
 		singletonUser = &User{
-			input: "1 + 1",
+			input: "10 * 10",
 		}
 	})
 	return singletonUser

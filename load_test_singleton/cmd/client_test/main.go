@@ -8,7 +8,8 @@ import (
 	"time"
 )
 
-func do100RequestToServerSingleThread() {
+func main() {
+	start := time.Now()
 	wg := sync.WaitGroup{}
 	wg.Add(100)
 	for i := 0; i < 100; i++ {
@@ -18,14 +19,10 @@ func do100RequestToServerSingleThread() {
 			if err := user.SendRequest(); err != nil {
 				log.Fatal(err)
 			}
+			fmt.Println(user.Result, i)
 		}()
 	}
 	wg.Wait()
-}
-
-func main() {
-	start := time.Now()
-	do100RequestToServerSingleThread()
 	duration := time.Since(start)
 	fmt.Printf("Tempo total: %d ms (%.2f segundos)\n", duration.Milliseconds(), duration.Seconds())
 }
