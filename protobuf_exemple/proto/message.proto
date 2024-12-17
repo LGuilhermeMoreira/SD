@@ -1,1 +1,32 @@
-syntax = ""
+syntax = "proto3";
+
+package example;
+
+// Definição da mensagem Person
+message Person {
+  string name = 1;
+  int32 id = 2;
+  string email = 3;
+}
+
+// Definição da mensagem AddressBook
+message AddressBook {
+  repeated Person people = 1;
+}
+
+// Serviço de exemplo para gerenciar um livro de endereços
+service AddressBookService {
+  // Método para adicionar uma pessoa
+  rpc AddPerson (Person) returns (Response);
+
+  // Método para listar todas as pessoas
+  rpc ListPeople (Empty) returns (AddressBook);
+}
+
+// Definição de mensagem de resposta para operações bem-sucedidas
+message Response {
+  string message = 1;
+}
+
+// Mensagem vazia usada para chamadas que não precisam de dados de entrada
+message Empty {}
