@@ -1,0 +1,38 @@
+package udp
+
+import (
+	"log"
+	"net"
+)
+
+type UDPServer struct {
+	Port       string
+	Ip         string
+	ServerType string
+	Dispatcher Dispatcher
+}
+
+func (s *UDPServer) Start() {
+	addr, err := net.ResolveUDPAddr(s.ServerType, s.Ip+s.Port)
+	if err != nil {
+		log.Fatalf("Error creating addr: %s", err)
+	}
+	conn, err := net.ListenUDP("udp", addr)
+	if err != nil {
+		log.Fatalf("Error starting server: %s", err)
+	}
+	defer conn.Close()
+
+	log.Printf("Server listening on port %v\n", s.Port)
+	for {
+		buffer := make([]byte, 1024)
+		n, addr, err := conn.ReadFromUDP(buffer)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		log.Printf("Received message from %v\n", addr)
+		s.Dispatcher.Solve(conn, addr, buffer[:n])
+	}
+
+}
