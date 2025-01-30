@@ -31,7 +31,9 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 			"status": 409,
 			"error":  "Mensagem duplicada",
 		}
-		return
+		msg.MessageType = 1
+		data, _ := json.Marshal(msg)
+		conn.WriteToUDP(data, addr)
 	}
 	switch msg.ObjectReference {
 	case "Escola":
@@ -43,9 +45,9 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 			"error":  "objectReference não encontrado",
 		}
 	}
-	// msg.Debug()
+	msg.Debug()
 	randNum := rand.Int()
-	if randNum%2 == 0 && randNum%3 == 0 {
+	if randNum%2 == 0 && randNum%3 == 0 && randNum%5 == 0 {
 		log.Println("Erro ao enviar a mensagem", randNum)
 		return
 	}

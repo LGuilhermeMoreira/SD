@@ -18,7 +18,6 @@ func NewSkeleton(escolaService service.Escola) *Skeleton {
 }
 
 func (s *Skeleton) HandleRequest(message *dto.Message) {
-
 	switch message.Method {
 	case "CadastrarAluno":
 		var alunoDto dto.Aluno
@@ -56,7 +55,7 @@ func (s *Skeleton) handleCadastarAluno(alunoDto dto.Aluno) (any, bool) {
 	if err != nil {
 		return map[string]any{
 			"status": 500,
-			"error":  err,
+			"error":  err.Error(),
 		}, false
 	}
 	return response, true
@@ -68,19 +67,19 @@ func (s *Skeleton) handleCadastarProfessor(professorDto dto.Professor) (any, boo
 	if err != nil {
 		return map[string]any{
 			"status": 500,
-			"error":  err,
+			"error":  err.Error(),
 		}, false
 	}
 	return response, true
 }
 
 func (s *Skeleton) handleCadastarDisciplina(disciplinaDto dto.Disciplina) (any, bool) {
-	disciplinaModel := models.NewDisciplina(disciplinaDto.Codigo, disciplinaDto.Nome, disciplinaDto.Professores...)
+	disciplinaModel := models.NewDisciplina(disciplinaDto.Nome, disciplinaDto.Codigo, disciplinaDto.Professores...)
 	response, err := s.escolaService.CadastrarDisciplina(*disciplinaModel)
 	if err != nil {
 		return map[string]any{
 			"status": 500,
-			"error":  err,
+			"error":  err.Error(),
 		}, false
 	}
 	return response, true
@@ -91,7 +90,7 @@ func (s *Skeleton) handleBuscarAlunoPorCodigo(codigo string) (any, bool) {
 	if err != nil {
 		return map[string]any{
 			"status": 500,
-			"error":  err,
+			"error":  err.Error(),
 		}, false
 	}
 	return response, true
@@ -100,7 +99,6 @@ func (s *Skeleton) handleBuscarAlunoPorCodigo(codigo string) (any, bool) {
 func escreveMensagem(data any, ok bool, message *dto.Message) {
 	if !ok {
 		message.Error = data
-		message.Arguments = json.RawMessage{}
 	} else {
 		responseData, _ := json.Marshal(data)
 		message.Arguments = responseData

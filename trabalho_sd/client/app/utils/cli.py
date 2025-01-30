@@ -22,7 +22,8 @@ class Interface:
                 codigo = Codigo(codigo=codigo_str)
                 self.limpar_terminal()
                 msg = es.buscar_aluno_por_codigo(codigo)
-                self.handle_response(msg)
+                if msg is not None:
+                    self.handle_response(msg)
             
             elif choice == '2':
                 nome = input("Nome do aluno: ")
@@ -33,17 +34,18 @@ class Interface:
                 self.limpar_terminal()
                 aluno = Aluno(nome=nome, curso=curso, cpf=cpf, disciplinas=disciplinas)
                 msg = es.cadastrar_aluno(aluno=aluno)
-                self.handle_response(msg)
+                if msg is not None:
+                    self.handle_response(msg)
                
-
             elif choice == '3':
                 nome = input("Nome da disciplina: ")
                 codigo = input("Código da disciplina: ")
                 professores = []
                 self.limpar_terminal()
-                disciplina = Disciplina(nome=nome, codigo=codigo, professores=professores)
+                disciplina = Disciplina(nome, codigo,professores)
                 msg = es.cadastrar_disciplina(disciplina=disciplina)
-                self.handle_response(msg)
+                if msg is not None:
+                    self.handle_response(msg)
             
             elif choice == '4':
                 nome = input("Nome do professor: ")
@@ -51,15 +53,22 @@ class Interface:
                 professor = Professor(nome=nome, email=email)
                 self.limpar_terminal()
                 msg = es.cadastrar_professor(professor=professor)
-                self.handle_response(msg)
+                if msg is not None:
+                    self.handle_response(msg)
             elif choice == '0':
                 break
             
             else:
                 print("Opção inválida. Tente novamente.")
                 
-    # implmenetar isso
+    
     def handle_response(self,msg : Message):
+        if msg.error is not None:
+            status = msg.error.get("status")
+            error = msg.error.get("error")
+            print(f"Status: {status}")
+            print(f"error: {error}")
+            return
         match msg.method:
             case "CadastrarAluno" | "CadastrarDisciplina" | "CadastrarProfessor":
                 status = msg.arguments.get("status")
@@ -74,6 +83,7 @@ class Interface:
                     print(f"Nome: {aluno['nome']}, CPF: {aluno['cpf']}")
             case _:
                 print("Erro")
+            
                 
     def limpar_terminal(self):
         os.system('cls' if os.name == 'nt' else 'clear')

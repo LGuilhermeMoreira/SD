@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"trabalho_sd/models"
 )
 
@@ -30,7 +31,7 @@ func NewBancoDeDados() *BancoDeDados {
 				*models.NewDisciplina("SD", "SD001",
 					*models.NewProfessor("marcos", "marcos@email.com"))),
 
-			*models.NewAluno("Iaia Pirata", "CC", "1233212221",
+			*models.NewAluno("Iaia Pirata", "CC", "1233212225",
 				*models.NewDisciplina("SD", "SD001",
 					*models.NewProfessor("marcos", "marcos@email.com"))),
 
@@ -50,6 +51,7 @@ func NewBancoDeDados() *BancoDeDados {
 }
 
 func (b *BancoDeDados) CadastrarAluno(aluno models.Aluno) error {
+	fmt.Printf("Nome:%v\tMatricula:%v\tCurso:%v\tCpf:%v\n", aluno.Nome, aluno.Matricula, aluno.Curso, aluno.Cpf)
 	for _, alunoList := range b.Alunos {
 		if alunoList.Cpf == aluno.Cpf {
 			return errors.New("cpf já atribuido a outro aluno")
@@ -60,8 +62,9 @@ func (b *BancoDeDados) CadastrarAluno(aluno models.Aluno) error {
 }
 
 func (b *BancoDeDados) CadastrarDisciplina(disciplina models.Disciplina) error {
+	fmt.Printf("Nome: %v\tCodigo %v\n", disciplina.Nome, disciplina.Codigo)
 	for _, disciplinaList := range b.Disciplinas {
-		if disciplinaList.Nome == disciplina.Nome && disciplinaList.Codigo == disciplina.Codigo {
+		if disciplinaList.Codigo == disciplina.Codigo {
 			return errors.New("disciplina já cadastrada")
 		}
 	}
@@ -70,6 +73,7 @@ func (b *BancoDeDados) CadastrarDisciplina(disciplina models.Disciplina) error {
 }
 
 func (b *BancoDeDados) CadastrarProfessor(professor models.Professor) error {
+	fmt.Printf("Nome:%v\tEmail:%v\n", professor.Nome, professor.Email)
 	for _, professorList := range b.Professores {
 		if professorList.Email == professor.Email {
 			return errors.New("professor já cadastrado")
