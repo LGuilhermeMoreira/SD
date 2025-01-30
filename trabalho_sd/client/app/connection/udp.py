@@ -1,6 +1,4 @@
 import socket
-from app.models import Message
-
 
 def enviar_mensagem(host: str = 'localhost', port: int = 4567, message_json: str = "") -> bytes | None:
     addr = (host, port)

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+	"fmt"
 	"trabalho_sd/models"
 )
 
@@ -29,7 +31,7 @@ func NewBancoDeDados() *BancoDeDados {
 				*models.NewDisciplina("SD", "SD001",
 					*models.NewProfessor("marcos", "marcos@email.com"))),
 
-			*models.NewAluno("Iaia Pirata", "CC", "1233212221",
+			*models.NewAluno("Iaia Pirata", "CC", "1233212225",
 				*models.NewDisciplina("SD", "SD001",
 					*models.NewProfessor("marcos", "marcos@email.com"))),
 
@@ -49,16 +51,34 @@ func NewBancoDeDados() *BancoDeDados {
 }
 
 func (b *BancoDeDados) CadastrarAluno(aluno models.Aluno) error {
+	fmt.Printf("Nome:%v\tMatricula:%v\tCurso:%v\tCpf:%v\n", aluno.Nome, aluno.Matricula, aluno.Curso, aluno.Cpf)
+	for _, alunoList := range b.Alunos {
+		if alunoList.Cpf == aluno.Cpf {
+			return errors.New("cpf já atribuido a outro aluno")
+		}
+	}
 	b.Alunos = append(b.Alunos, aluno)
 	return nil
 }
 
 func (b *BancoDeDados) CadastrarDisciplina(disciplina models.Disciplina) error {
+	fmt.Printf("Nome: %v\tCodigo %v\n", disciplina.Nome, disciplina.Codigo)
+	for _, disciplinaList := range b.Disciplinas {
+		if disciplinaList.Codigo == disciplina.Codigo {
+			return errors.New("disciplina já cadastrada")
+		}
+	}
 	b.Disciplinas = append(b.Disciplinas, disciplina)
 	return nil
 }
 
 func (b *BancoDeDados) CadastrarProfessor(professor models.Professor) error {
+	fmt.Printf("Nome:%v\tEmail:%v\n", professor.Nome, professor.Email)
+	for _, professorList := range b.Professores {
+		if professorList.Email == professor.Email {
+			return errors.New("professor já cadastrado")
+		}
+	}
 	b.Professores = append(b.Professores, professor)
 	return nil
 }
@@ -71,6 +91,9 @@ func (b *BancoDeDados) BuscarAlunoPorCodigo(codigo string) ([]models.Aluno, erro
 				responseData = append(responseData, aluno)
 			}
 		}
+	}
+	if len(responseData) == 0 {
+		return nil, errors.New("nenhum aluno encontrado")
 	}
 	return responseData, nil
 }
