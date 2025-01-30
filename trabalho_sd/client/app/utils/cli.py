@@ -28,7 +28,8 @@ class Interface:
                 nome = input("Nome do aluno: ")
                 curso = input("Curso do aluno: ")
                 cpf = input("CPF do aluno: ")
-                disciplinas = []
+                prof = Professor("marcos","marcos@email.com").__dict__
+                disciplinas = [Disciplina("SD","SD001",prof).__dict__]
                 self.limpar_terminal()
                 aluno = Aluno(nome=nome, curso=curso, cpf=cpf, disciplinas=disciplinas)
                 msg = es.cadastrar_aluno(aluno=aluno)

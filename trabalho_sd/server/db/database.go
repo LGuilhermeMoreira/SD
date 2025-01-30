@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"trabalho_sd/models"
 )
 
@@ -49,16 +50,31 @@ func NewBancoDeDados() *BancoDeDados {
 }
 
 func (b *BancoDeDados) CadastrarAluno(aluno models.Aluno) error {
+	for _, alunoList := range b.Alunos {
+		if alunoList.Cpf == aluno.Cpf {
+			return errors.New("cpf já atribuido a outro aluno")
+		}
+	}
 	b.Alunos = append(b.Alunos, aluno)
 	return nil
 }
 
 func (b *BancoDeDados) CadastrarDisciplina(disciplina models.Disciplina) error {
+	for _, disciplinaList := range b.Disciplinas {
+		if disciplinaList.Nome == disciplina.Nome && disciplinaList.Codigo == disciplina.Codigo {
+			return errors.New("disciplina já cadastrada")
+		}
+	}
 	b.Disciplinas = append(b.Disciplinas, disciplina)
 	return nil
 }
 
 func (b *BancoDeDados) CadastrarProfessor(professor models.Professor) error {
+	for _, professorList := range b.Professores {
+		if professorList.Email == professor.Email {
+			return errors.New("professor já cadastrado")
+		}
+	}
 	b.Professores = append(b.Professores, professor)
 	return nil
 }
@@ -71,6 +87,9 @@ func (b *BancoDeDados) BuscarAlunoPorCodigo(codigo string) ([]models.Aluno, erro
 				responseData = append(responseData, aluno)
 			}
 		}
+	}
+	if len(responseData) == 0 {
+		return nil, errors.New("nenhum aluno encontrado")
 	}
 	return responseData, nil
 }

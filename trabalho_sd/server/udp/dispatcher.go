@@ -2,6 +2,8 @@ package udp
 
 import (
 	"encoding/json"
+	"log"
+	"math/rand"
 	"net"
 	"trabalho_sd/dto"
 
@@ -42,6 +44,11 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 		}
 	}
 	// msg.Debug()
+	randNum := rand.Int()
+	if randNum%2 == 0 && randNum%3 == 0 {
+		log.Println("Erro ao enviar a mensagem", randNum)
+		return
+	}
 	data, _ := json.Marshal(msg)
 	conn.WriteToUDP(data, addr)
 }
