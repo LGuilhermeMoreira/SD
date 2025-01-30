@@ -25,7 +25,7 @@ func (m Message) Debug() {
 	var input map[string]any
 	err := json.Unmarshal(m.Arguments, &input)
 	if err != nil {
-		fmt.Println("Erro ao fazer unmarshal dos argumentos")
+		fmt.Println("Erro ao fazer unmarshal dos argumentos", err)
 	} else {
 		fmt.Printf("Arguments: %v\n", input)
 	}
