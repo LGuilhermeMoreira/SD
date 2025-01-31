@@ -35,6 +35,9 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 		data, _ := json.Marshal(msg)
 		conn.WriteToUDP(data, addr)
 	}
+	defer func() {
+		d.mensagens[msg.RequestID] = true
+	}()
 	switch msg.ObjectReference {
 	case "Escola":
 		d.Skeleton.HandleRequest(&msg)

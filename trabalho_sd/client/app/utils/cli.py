@@ -18,7 +18,7 @@ class Interface:
             choice = input("Opção: ")
 
             if choice == '1':
-                codigo_str = input("Digite o código do aluno: ")
+                codigo_str = input("Digite o código da disciplina: ")
                 codigo = Codigo(codigo=codigo_str)
                 self.limpar_terminal()
                 msg = es.buscar_aluno_por_codigo(codigo)
