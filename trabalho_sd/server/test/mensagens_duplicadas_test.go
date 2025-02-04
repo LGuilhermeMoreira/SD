@@ -14,10 +14,10 @@ import (
 
 // 90784ddf-e491-4433-84ab-eb0d973b4c6e uuid
 func TestMensagensDuplicadas(t *testing.T) {
-	err := send()
-	assert.Nil(t, err)
-	err = send()
-	assert.NotNil(t, err)
+	err1 := send()
+	assert.Nil(t, err1)
+	err2 := send()
+	assert.NotNil(t, err2)
 }
 
 func send() error {
@@ -33,11 +33,13 @@ func send() error {
 	}
 	defer conn.Close()
 
-	codigo := dto.Codigo{
-		Codigo: "SD001",
+	aluno := dto.Aluno{
+		Nome:  "A",
+		Curso: "B",
+		Cpf:   "12332100099",
 	}
 
-	data, err := json.Marshal(codigo)
+	data, err := json.Marshal(aluno)
 	if err != nil {
 		return err
 	}
@@ -52,7 +54,7 @@ func send() error {
 		MessageType:     0,
 		ObjectReference: "Escola",
 		Arguments:       data,
-		Method:          "BuscarAlunoPorCodigo",
+		Method:          "CadastrarAluno",
 	}
 
 	dataR, err := json.Marshal(message)

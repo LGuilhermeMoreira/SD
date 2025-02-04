@@ -5,7 +5,7 @@ def enviar_mensagem(host: str = 'localhost', port: int = 4567, message_json: str
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.sendto(message_json.encode('utf-8'), addr)
-            sock.settimeout(5)  
+            sock.settimeout(1)  
             data, _ = sock.recvfrom(1024)
             return data
 
