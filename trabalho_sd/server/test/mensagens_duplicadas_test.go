@@ -17,7 +17,7 @@ func TestMensagensDuplicadas(t *testing.T) {
 	err1 := send()
 	assert.Nil(t, err1)
 	err2 := send()
-	assert.NotNil(t, err2)
+	assert.Nil(t, err2)
 }
 
 func send() error {

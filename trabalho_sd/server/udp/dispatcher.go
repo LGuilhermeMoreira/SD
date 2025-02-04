@@ -13,7 +13,7 @@ import (
 
 type Dispatcher struct {
 	Skeleton  Skeleton
-	mensagens map[uuid.UUID]dto.Message // Mapa usando uuid.UUID como chave
+	mensagens map[uuid.UUID]dto.Message
 }
 
 func NewDispatcher(s Skeleton) *Dispatcher {
