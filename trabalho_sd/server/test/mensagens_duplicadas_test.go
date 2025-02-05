@@ -3,7 +3,6 @@ package test
 import (
 	"encoding/json"
 	"errors"
-	"net"
 	"testing"
 	"time"
 	"trabalho_sd/dto"
@@ -21,17 +20,7 @@ func TestMensagensDuplicadas(t *testing.T) {
 }
 
 func send() error {
-	addr, err := net.ResolveUDPAddr("udp", "localhost:4567")
-	if err != nil {
-		return err
-	}
-
-	// cria a conexão com servidor
-	conn, err := net.DialUDP("udp", nil, addr)
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
+	cnfg := NewTestConnction()
 
 	aluno := dto.Aluno{
 		Nome:  "A",
@@ -62,14 +51,14 @@ func send() error {
 		return err
 	}
 
-	_, err = conn.Write(dataR)
+	_, err = cnfg.Conn.Write(dataR)
 	if err != nil {
 		return err
 	}
 
 	buffer := make([]byte, 1024)
-	conn.SetReadDeadline(time.Now().Add(time.Second * 5))
-	n, _, err := conn.ReadFromUDP(buffer)
+	cnfg.Conn.SetReadDeadline(time.Now().Add(time.Second * 5))
+	n, _, err := cnfg.Conn.ReadFromUDP(buffer)
 
 	if err != nil {
 		return err

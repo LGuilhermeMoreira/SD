@@ -3,8 +3,6 @@ package udp
 import (
 	"encoding/json"
 	"log"
-	"math/rand"
-	"net"
 	"time"
 	"trabalho_sd/dto"
 
@@ -23,12 +21,12 @@ func NewDispatcher(s Skeleton) *Dispatcher {
 	}
 }
 
-func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) {
+func (d *Dispatcher) Solve(buffer []byte) []byte {
 	var msg dto.Message
 	err := json.Unmarshal(buffer, &msg)
 	if err != nil {
 		log.Println("Erro ao deserializar a mensagem:", err)
-		return
+		return []byte{}
 	}
 	msg.Debug()
 
@@ -37,51 +35,47 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 		data, err := json.Marshal(resposta)
 		if err != nil {
 			log.Println("Erro ao serializar resposta do histórico:", err)
-			return
 		}
-		_, err = conn.WriteToUDP(data, addr)
-		if err != nil {
-			log.Println("Erro ao enviar resposta do histórico:", err)
-		}
-		return
+		return data
 	}
+
+	var arguments any
+	var ok bool
 
 	switch msg.ObjectReference {
 	case "Escola":
-		d.Skeleton.HandleRequest(&msg)
+		arguments, ok = d.Skeleton.HandleRequest(&msg)
 	default:
-		msg.MessageType = 1
-		msg.Error = map[string]any{
+		arguments = map[string]any{
 			"status": 404,
 			"error":  "objectReference não encontrado",
 		}
+		ok = false
 	}
+	escreveMensagem(arguments, ok, &msg)
 	msg.Debug()
 
-	randNum := rand.Int()
-	// && randNum%3 == 0 && randNum%5 == 0
-	if randNum%2 == 0 {
-		log.Println("Simulando perda de pacote (não enviando a resposta):", randNum)
-		return
-	}
-
-	// Armazena a resposta no histórico
 	d.mensagens[msg.RequestID] = msg
 
 	data, err := json.Marshal(msg)
 	if err != nil {
 		log.Println("Erro ao serializar a mensagem:", err)
-		return
+		return []byte{}
 	}
-	_, err = conn.WriteToUDP(data, addr)
-	if err != nil {
-		log.Println("Erro ao enviar a resposta:", err)
-	}
-
-	// Remove a mensagem do histórico após um tempo
 	go func() {
 		time.Sleep(5 * time.Second)
 		delete(d.mensagens, msg.RequestID)
 		log.Println("Mensagem removida do histórico:", msg.RequestID)
 	}()
+	return data
+}
+
+func escreveMensagem(data any, ok bool, message *dto.Message) {
+	if !ok {
+		message.Error = data
+	} else {
+		responseData, _ := json.Marshal(data)
+		message.Arguments = responseData
+	}
+	message.MessageType = 1
 }

@@ -17,35 +17,30 @@ func NewSkeleton(escolaService service.Escola) *Skeleton {
 	}
 }
 
-func (s *Skeleton) HandleRequest(message *dto.Message) {
+func (s *Skeleton) HandleRequest(message *dto.Message) (any, bool) {
 	switch message.Method {
 	case "CadastrarAluno":
 		var alunoDto dto.Aluno
 		json.Unmarshal(message.Arguments, &alunoDto)
-		data, ok := s.handleCadastarAluno(alunoDto)
-		escreveMensagem(data, ok, message)
+		return s.handleCadastarAluno(alunoDto)
+
 	case "CadastrarProfessor":
 		var professorDto dto.Professor
 		json.Unmarshal(message.Arguments, &professorDto)
-		data, ok := s.handleCadastarProfessor(professorDto)
-		escreveMensagem(data, ok, message)
+		return s.handleCadastarProfessor(professorDto)
 	case "CadastrarDisciplina":
 		var disciplinaDto dto.Disciplina
 		json.Unmarshal(message.Arguments, &disciplinaDto)
-		data, ok := s.handleCadastarDisciplina(disciplinaDto)
-		escreveMensagem(data, ok, message)
+		return s.handleCadastarDisciplina(disciplinaDto)
 	case "BuscarAlunoPorCodigo":
 		var codigoDto dto.Codigo
 		json.Unmarshal(message.Arguments, &codigoDto)
-		data, ok := s.handleBuscarAlunoPorCodigo(codigoDto.Codigo)
-		escreveMensagem(data, ok, message)
+		return s.handleBuscarAlunoPorCodigo(codigoDto.Codigo)
 	default:
-		data := map[string]any{
+		return map[string]any{
 			"status": 404,
 			"error":  "serviço não encontrado",
-		}
-		ok := false
-		escreveMensagem(data, ok, message)
+		}, false
 	}
 }
 
@@ -94,14 +89,4 @@ func (s *Skeleton) handleBuscarAlunoPorCodigo(codigo string) (any, bool) {
 		}, false
 	}
 	return response, true
-}
-
-func escreveMensagem(data any, ok bool, message *dto.Message) {
-	if !ok {
-		message.Error = data
-	} else {
-		responseData, _ := json.Marshal(data)
-		message.Arguments = responseData
-	}
-	message.MessageType = 1
 }

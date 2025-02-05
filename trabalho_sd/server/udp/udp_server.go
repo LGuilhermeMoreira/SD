@@ -2,6 +2,7 @@ package udp
 
 import (
 	"log"
+	"math/rand"
 	"net"
 )
 
@@ -33,7 +34,12 @@ func (s *UDPServer) Start() {
 			continue
 		}
 		log.Printf("Received message from %v\n", addr)
-		s.Dispatcher.Solve(conn, addr, buffer[:n])
+		data := s.Dispatcher.Solve(buffer[:n])
+		randNum := rand.Int()
+		if randNum%2 == 0 && randNum%3 == 0 && randNum%5 == 0 {
+			log.Println("Simulando perda de pacote (não enviando a resposta):", randNum)
+		}
+		conn.WriteToUDP(data, addr)
 	}
 
 }
