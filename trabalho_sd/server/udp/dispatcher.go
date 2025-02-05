@@ -32,10 +32,8 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 	}
 	msg.Debug()
 
-	// Verifica se a mensagem já foi processada
 	if resposta, loaded := d.mensagens[msg.RequestID]; loaded {
 		log.Println("Mensagem duplicada detectada:", msg.RequestID)
-		// Envia a resposta do histórico (independente do método)
 		data, err := json.Marshal(resposta)
 		if err != nil {
 			log.Println("Erro ao serializar resposta do histórico:", err)
@@ -48,7 +46,6 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 		return
 	}
 
-	// Processa a mensagem
 	switch msg.ObjectReference {
 	case "Escola":
 		d.Skeleton.HandleRequest(&msg)
@@ -61,9 +58,9 @@ func (d *Dispatcher) Solve(conn *net.UDPConn, addr *net.UDPAddr, buffer []byte) 
 	}
 	msg.Debug()
 
-	//Simula perda de pacote aleatoria
 	randNum := rand.Int()
-	if randNum%2 == 0 && randNum%3 == 0 && randNum%5 == 0 {
+	// && randNum%3 == 0 && randNum%5 == 0
+	if randNum%2 == 0 {
 		log.Println("Simulando perda de pacote (não enviando a resposta):", randNum)
 		return
 	}

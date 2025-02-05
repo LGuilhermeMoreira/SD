@@ -13,6 +13,7 @@ type UDPServer struct {
 }
 
 func (s *UDPServer) Start() {
+	// criando
 	addr, err := net.ResolveUDPAddr(s.ServerType, s.Ip+s.Port)
 	if err != nil {
 		log.Fatalf("Error creating addr: %s", err)
