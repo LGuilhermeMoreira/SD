@@ -1,3 +1,14 @@
 from app.utils import Interface
-interface = Interface()
-interface.start()
+from app.proxy import EscolaService
+from app.connection import UDPCliente
+
+#DI
+try:    
+    udp = UDPCliente()
+    es = EscolaService(udpCliente=udp)
+    interface = Interface(escolaService=es)
+    interface.start()
+except Exception as e:
+    print(f"Erro no programa: {e}")
+
+#start

@@ -1,29 +1,38 @@
-from app.models import Aluno, Codigo, Disciplina, Professor, Message
-from app.connection import enviar_mensagem
+import socket
+from app.models import *
+from app.connection import UDPCliente
 
 class EscolaService:
-    
-    def _tentar_enviar_mensagem(self, msg: Message) -> Message | None:
+    def __init__(self,udpCliente:UDPCliente):
+        self.udp = udpCliente
+        
+
+    def _processa_requisicao(self, service: str, method: str, arguments) -> Message | None:
+        msg = Message(service, method, arguments.__dict__)
         msg_json = msg.to_json()
         tentativas = 3
+
         for _ in range(tentativas):
-            data = enviar_mensagem(message_json=msg_json)
-            if data is not None:
+            try:
+                self.udp.enviar_mensagem(msg_json)
+                data = self.udp.receber_mensagem()
                 return Message.from_json(data)
+            except socket.timeout:
+                print(f"Tentativa falhou, reenviando... ({_ + 1}/{tentativas})")
+            except Exception as e:
+                print(f"Erro ao processar requisição: {e}")
+                return None
+        
         return None
-    
+
     def cadastrar_aluno(self, aluno: Aluno) -> Message | None:
-        msg = Message("Escola", "CadastrarAluno", aluno.__dict__)
-        return self._tentar_enviar_mensagem(msg)
-    
+        return self._processa_requisicao("Escola", "CadastrarAluno", aluno)
+
     def cadastrar_disciplina(self, disciplina: Disciplina) -> Message | None:
-        msg = Message("Escola", "CadastrarDisciplina", disciplina.__dict__)
-        return self._tentar_enviar_mensagem(msg)
-    
+        return self._processa_requisicao("Escola", "CadastrarDisciplina", disciplina)
+
     def cadastrar_professor(self, professor: Professor) -> Message | None:
-        msg = Message("Escola", "CadastrarProfessor", professor.__dict__)
-        return self._tentar_enviar_mensagem(msg)
-    
+        return self._processa_requisicao("Escola", "CadastrarProfessor", professor)
+
     def buscar_aluno_por_codigo(self, codigo: Codigo) -> Message | None:
-        msg = Message("Escola", "BuscarAlunoPorCodigo", codigo.__dict__)
-        return self._tentar_enviar_mensagem(msg)
+        return self._processa_requisicao("Escola", "BuscarAlunoPorCodigo", codigo)

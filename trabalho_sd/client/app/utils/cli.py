@@ -2,11 +2,11 @@ from app.models import *
 from app.proxy import *
 import os
 class Interface:
-    def __init__(self):
-        pass
+    def __init__(self,escolaService:EscolaService):
+        self.es = escolaService
     
     def start(self):
-        es = EscolaService()
+        es = self.es
         while True:
             print("\nEscolha uma ação:")
             print("1. Buscar Aluno por Código")
