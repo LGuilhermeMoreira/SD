@@ -1,13 +1,13 @@
 import socket
-
+from app.models import *
 class UDPCliente:
     
-    def __init__(self):
+    def __init__(self,debug : bool):
         self.addr = ('localhost', 4567)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.settimeout(1) 
         
-        ok = self._ping_no_servidor()
+        ok = self._ping_no_servidor(debug)
         if not ok:
             raise ConnectionError("Não foi possível se conectar ao servidor")
         
@@ -18,12 +18,17 @@ class UDPCliente:
         data, _ = self.socket.recvfrom(1024)
         return data
 
-    def _ping_no_servidor(self):
-        try:
-            self.enviar_mensagem()
-            self.receber_mensagem()
-        except socket.timeout:
-            return False
-        except Exception as e:
-            print(f"Erro ao tentar pingar o servidor: {e}")
-            return False
+    def _ping_no_servidor(self,debug):
+            if debug:
+               print("enviando: ")
+               print({"msg" : "ping"}) 
+            msg = Message(objectReference="ping",method="ping",arguments={"msg" : "ping"})
+            data = msg.to_json()
+            self.enviar_mensagem(data)
+            data = self.receber_mensagem()
+            if debug:
+                print("recebendo: ")
+                print(str(data))
+            if data is None:
+                return False
+            return True

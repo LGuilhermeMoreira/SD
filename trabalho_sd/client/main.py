@@ -4,7 +4,7 @@ from app.connection import UDPCliente
 
 #DI
 try:    
-    udp = UDPCliente()
+    udp = UDPCliente(debug=False)
     es = EscolaService(udpCliente=udp)
     interface = Interface(escolaService=es)
     interface.start()

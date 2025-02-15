@@ -45,6 +45,10 @@ func (d *Dispatcher) Solve(buffer []byte) []byte {
 	switch msg.ObjectReference {
 	case "Escola":
 		arguments, ok = d.Skeleton.HandleRequest(&msg)
+	case "ping":
+		response := map[string]string{"msg": "pong"}
+		data, _ := json.Marshal(response)
+		return data
 	default:
 		arguments = map[string]any{
 			"status": 404,
