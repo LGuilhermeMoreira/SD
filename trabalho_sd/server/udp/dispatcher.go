@@ -67,7 +67,7 @@ func (d *Dispatcher) Solve(buffer []byte) []byte {
 		return []byte{}
 	}
 	go func() {
-		time.Sleep(5 * time.Second)
+		time.Sleep(20 * time.Second)
 		delete(d.mensagens, msg.RequestID)
 		log.Println("Mensagem removida do histórico:", msg.RequestID)
 	}()

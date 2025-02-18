@@ -65,7 +65,7 @@ func (b *BancoDeDados) CadastrarDisciplina(disciplina models.Disciplina) error {
 	fmt.Printf("Nome: %v\tCodigo %v\n", disciplina.Nome, disciplina.Codigo)
 	for _, disciplinaList := range b.Disciplinas {
 		if disciplinaList.Codigo == disciplina.Codigo {
-			return errors.New("disciplina já cadastrada")
+			return fmt.Errorf("código já está atribuido a disciplina: %v", disciplinaList.Nome)
 		}
 	}
 	b.Disciplinas = append(b.Disciplinas, disciplina)
@@ -76,7 +76,7 @@ func (b *BancoDeDados) CadastrarProfessor(professor models.Professor) error {
 	fmt.Printf("Nome:%v\tEmail:%v\n", professor.Nome, professor.Email)
 	for _, professorList := range b.Professores {
 		if professorList.Email == professor.Email {
-			return errors.New("professor já cadastrado")
+			return fmt.Errorf("email já pertencente ao professor: %s", professorList.Nome)
 		}
 	}
 	b.Professores = append(b.Professores, professor)
@@ -96,4 +96,11 @@ func (b *BancoDeDados) BuscarAlunoPorCodigo(codigo string) ([]models.Aluno, erro
 		return nil, errors.New("nenhum aluno encontrado")
 	}
 	return responseData, nil
+}
+
+func (b *BancoDeDados) ListarTodasDisciplinas() ([]models.Disciplina, error) {
+	if len(b.Disciplinas) == 0 {
+		return nil, errors.New("nenhuma disciplina cadastrada")
+	}
+	return b.Disciplinas, nil
 }

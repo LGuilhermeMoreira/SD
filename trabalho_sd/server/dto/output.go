@@ -11,3 +11,8 @@ type OutPutStatus struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
+
+type OutPutTodasDisciplinas struct {
+	Status      int                 `json:"status" `
+	Disciplinas []models.Disciplina `json:"disciplinas"`
+}
