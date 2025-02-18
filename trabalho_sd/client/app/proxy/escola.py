@@ -36,3 +36,7 @@ class EscolaService:
 
     def buscar_aluno_por_codigo(self, codigo: Codigo) -> Message | None:
         return self._processa_requisicao("Escola", "BuscarAlunoPorCodigo", codigo)
+    
+    def listar_todas_disciplinas(self,default : Default):
+        return self._processa_requisicao("Escola","ListarTodasDisciplinas",default)
+        

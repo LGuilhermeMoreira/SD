@@ -13,6 +13,7 @@ class Interface:
             print("2. Cadastrar Aluno")
             print("3. Cadastrar Disciplina")
             print("4. Cadastrar Professor")
+            print("5. Listar Disciplinas")
             print("0. Sair")
 
             choice = input("Opção: ")
@@ -40,7 +41,9 @@ class Interface:
             elif choice == '3':
                 nome = input("Nome da disciplina: ")
                 codigo = input("Código da disciplina: ")
+                professor = Professor("vitu","vitu@mail.com").__dict__
                 professores = []
+                professores.append(professor)
                 self.limpar_terminal()
                 disciplina = Disciplina(nome, codigo,professores)
                 msg = es.cadastrar_disciplina(disciplina=disciplina)
@@ -53,6 +56,13 @@ class Interface:
                 professor = Professor(nome=nome, email=email)
                 self.limpar_terminal()
                 msg = es.cadastrar_professor(professor=professor)
+                if msg is not None:
+                    self.handle_response(msg)
+                    
+            elif choice == '5':
+                self.limpar_terminal()
+                dft = Default("Quero todas as disciplinas")
+                msg = es.listar_todas_disciplinas(dft)
                 if msg is not None:
                     self.handle_response(msg)
             elif choice == '0':
@@ -81,6 +91,19 @@ class Interface:
                 print(f"Status: {status}")
                 for aluno in alunos:
                     print(f"Nome: {aluno['nome']}, CPF: {aluno['cpf']}")
+            case "ListarTodasDisciplinas":
+                status = msg.arguments.get("status")  
+                disciplinas = msg.arguments.get("disciplinas", [])  
+                print(f"Status: {status}")
+                for disciplina in disciplinas:
+                    nome = disciplina.get("nome")  
+                    codigo = disciplina.get("codigo")
+                    professores = disciplina.get("professores", []) 
+                    
+                    for professor in professores:
+                        nome_professor = professor.get("nome")  
+                        email_professor = professor.get("email")  
+                        print(f"Disciplina: {nome}, Código: {codigo}, Professor: {nome_professor}, Email: {email_professor}")
             case _:
                 print("Erro")
             
