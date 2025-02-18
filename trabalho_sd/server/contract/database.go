@@ -7,4 +7,5 @@ type BancoDeDadosInterface interface {
 	CadastrarProfessor(models.Professor) error
 	CadastrarDisciplina(models.Disciplina) error
 	BuscarAlunoPorCodigo(string) ([]models.Aluno, error)
+	ListarTodasDisciplinas() ([]models.Disciplina, error)
 }

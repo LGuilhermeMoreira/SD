@@ -48,6 +48,17 @@ func (e *Escola) CadastrarDisciplina(disciplina models.Disciplina) (*dto.OutPutS
 	}, nil
 }
 
+func (e *Escola) ListarTodasDisciplinas() (*dto.OutPutTodasDisciplinas, error) {
+	data, err := e.BancoDeDados.ListarTodasDisciplinas()
+	if err != nil {
+		return nil, err
+	}
+	return &dto.OutPutTodasDisciplinas{
+		Disciplinas: data,
+		Status:      200,
+	}, nil
+}
+
 func (e *Escola) BuscarAlunoPorCodigo(codigo string) (*dto.OutputBuscaAlunoPorCodigo, error) {
 	alunos, err := e.BancoDeDados.BuscarAlunoPorCodigo(codigo)
 	if err != nil {

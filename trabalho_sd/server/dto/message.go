@@ -17,6 +17,9 @@ type Message struct {
 }
 
 func (m Message) Debug() {
+	if m.ObjectReference == "ping" {
+		return
+	}
 	fmt.Printf("\n")
 	fmt.Printf("MessageType: %v\n", m.MessageType)
 	fmt.Printf("RequestID: %v\n", m.RequestID)

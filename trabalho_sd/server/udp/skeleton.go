@@ -36,12 +36,25 @@ func (s *Skeleton) HandleRequest(message *dto.Message) (any, bool) {
 		var codigoDto dto.Codigo
 		json.Unmarshal(message.Arguments, &codigoDto)
 		return s.handleBuscarAlunoPorCodigo(codigoDto.Codigo)
+	case "ListarTodasDisciplinas":
+		return s.handleListarTodasDisciplinas()
 	default:
 		return map[string]any{
 			"status": 404,
 			"error":  "serviço não encontrado",
 		}, false
 	}
+}
+
+func (s *Skeleton) handleListarTodasDisciplinas() (any, bool) {
+	response, err := s.escolaService.ListarTodasDisciplinas()
+	if err != nil {
+		return map[string]any{
+			"status": 500,
+			"error":  err.Error(),
+		}, false
+	}
+	return response, true
 }
 
 func (s *Skeleton) handleCadastarAluno(alunoDto dto.Aluno) (any, bool) {
