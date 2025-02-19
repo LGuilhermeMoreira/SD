@@ -36,10 +36,12 @@ func (s *UDPServer) Start() {
 		log.Printf("Received message from %v\n", addr)
 		data := s.Dispatcher.Solve(buffer[:n])
 		randNum := rand.Int()
-		if randNum%2 == 0 && randNum%3 == 0 && randNum%5 == 0 {
+		// && randNum%3 == 0 && randNum%5 == 0
+		if randNum%2 == 0 {
 			log.Println("Simulando perda de pacote (não enviando a resposta):", randNum)
+		} else {
+			conn.WriteToUDP(data, addr)
 		}
-		conn.WriteToUDP(data, addr)
 	}
 
 }
